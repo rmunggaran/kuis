@@ -1,27 +1,30 @@
 <?php
 class M_data extends CI_model {
-    function input_data($data, $table) {
-        // Perbaikan disini: Parameter pertama adalah nama tabel, parameter kedua adalah data yang akan dimasukkan
-        return $this->db->insert($table, $data);
-    }
 
     function tampil_data() {
         return $this->db->get('pesawat');
     }
 
-    public function get_harga($table, $kelas) {
-        $this->db->select('harga_tiket');
+    function tampil_data_pembeli() {
+        return $this->db->get('pembeli');
+    }
+
+    public function get_harga($kode_pesawat, $kelas) {
+        $this->db->where('kode_pesawat', $kode_pesawat);
         $this->db->where('kelas', $kelas);
-        $query = $this->db->get($table);
+        $query = $this->db->get('harga_tiket');
 
         if ($query->num_rows() > 0) {
             $row = $query->row();
-            return $row->harga_tiket;
+            return $row->harga;
         } else {
-            return 0; 
+            return 0; // Atau nilai default jika harga tidak ditemukan.
         }
     }
 
-
+    public function input_data($data, $tabel) {
+        $this->db->insert($tabel, $data);
+    }
 }
+
 ?>

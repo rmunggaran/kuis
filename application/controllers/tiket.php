@@ -15,42 +15,74 @@ class tiket extends CI_Controller {
 		$this->load->view('index',$data);
 	}
 
-    function proses() {
-        $nama = $this->input->post('nama');
-        $kode = $this->input->post('kode');
-        $kelas = $this->input->post('kelas');
-        $Jumlah = $this->input->post('Jumlah');
-    
-        $harga = 0; 
-    
-        if ($kode == 'GRD') {
-            if ($kelas == 'eksekutif') {
-                $harga = $this->m_data->get_harga('pesawat', 'ekonomi');
+    public function proses() {
+        $this->form_validation->set_rules('nama','Nama','required|max_length[50]');
+        $this->form_validation->set_rules('kode','Kode','required|max_length[8]');
+        $this->form_validation->set_rules('kelas','Kelas','required');
+        $this->form_validation->set_rules('jumlah','Jumlah','required');
+
+        if($this->form_validation->run() == TRUE)
+        {
+            $nama = $this->input->post('nama');
+            $kode = $this->input->post('kode');
+            $kelas = $this->input->post('kelas');
+            $jumlah = $this->input->post('jumlah');
+            
+            $harga = 0;
+            $total_bayar = 0;
+            
+            if ($kode == 'Garuda') {
+                $harga = $this->m_data->get_harga('GRD', $kelas);
+            
+                $total_bayar = $harga * $jumlah;
+            
+                $data = array(
+                    'nama' => $nama,
+                    'nama_pesawat' => 'Garuda', 
+                    'kelas' => $kelas,
+                    'harga_tiket' => $harga,
+                    'jumlah_tiket' => $jumlah,
+                    'total' => $total_bayar
+                );
+            
+                $this->m_data->input_data($data, 'pembeli');
+                redirect('pesawat/faktur');
+            } elseif($kode == 'Merpati') {
+                $harga = $this->m_data->get_harga('MPT', $kelas);
+            
+                $total_bayar = $harga * $jumlah;
+            
+                $data = array(
+                    'nama' => $nama,
+                    'nama_pesawat' => 'Merpati', 
+                    'kelas' => $kelas,
+                    'harga_tiket' => $harga,
+                    'jumlah_tiket' => $jumlah,
+                    'total' => $total_bayar
+                );
+            
+                $this->m_data->input_data($data, 'pembeli');
+                redirect('pesawat/faktur');
+            } elseif($kode == 'Batavia') {
+                $harga = $this->m_data->get_harga('BTV', $kelas);
+            
+                $total_bayar = $harga * $jumlah;
+            
+                $data = array(
+                    'nama' => $nama,
+                    'nama_pesawat' => 'Batavia', 
+                    'kelas' => $kelas,
+                    'harga_tiket' => $harga,
+                    'jumlah_tiket' => $jumlah,
+                    'total' => $total_bayar
+                );
+            
+                $this->m_data->input_data($data, 'pembeli');
+                $this->load->view('faktur', $data);
             }
-            if ($kelas == 'bisnis') {
-                $harga = $this->m_data->get_harga('pesawat', 'bisnis');
-            }
-            if ($kelas == 'ekonomi') {
-                $harga = $this->m_data->get_harga('pesawat', 'ekonomi');
-            }
-    
-            $Total_bayar = $harga * $Jumlah;
-    
-            $data = array(
-                'nama' => $nama,
-                'nama_pesawat' => $nama_pesawat,
-                'kode' => $kode,
-                'kelas' => $kelas,
-                'Jumlah' => $Jumlah,
-                'Total_bayar' => $Total_bayar
-            );
-    
-            $this->m_data->input_data($data, 'pesawat');
-            redirect('pesawat/faktur');
-        } else {
-            $this->load->view('index');
+        }else{
+            $this->load->view('input_data');
         }
-    }
-    
+    } 
     
 }
