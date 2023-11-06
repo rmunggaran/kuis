@@ -46,7 +46,7 @@ class tiket extends CI_Controller {
                 );
             
                 $this->m_data->input_data($data, 'pembeli');
-                redirect('faktur');
+                $this->load->view('faktur', $data);
             } elseif($kode == 'Merpati') {
                 $harga = $this->m_data->get_harga('MPT', $kelas);
             
@@ -62,7 +62,7 @@ class tiket extends CI_Controller {
                 );
             
                 $this->m_data->input_data($data, 'pembeli');
-                redirect('faktur');
+                $this->load->view('faktur', $data);
             } elseif($kode == 'Batavia') {
                 $harga = $this->m_data->get_harga('BTV', $kelas);
             
